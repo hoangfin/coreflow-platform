@@ -1,0 +1,32 @@
+{
+  "name": "coreflow-platform",
+  "private": true,
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "e2e"
+  ],
+  "scripts": {
+    "dev": "run-p dev:api dev:web",
+    "dev:api": "npm run dev -w @coreflow/api",
+    "dev:web": "npm run dev -w @coreflow/web",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "oxlint",
+    "test": "npm run test --workspaces --if-present",
+    "test:e2e": "npm run test:e2e -w e2e",
+    "contract:sync": "npm run contract:sync -w @coreflow/api",
+    "contract:generate": "npm run generate -w @coreflow/api-client",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check"
+  },
+  "devDependencies": {
+    "npm-run-all2": "^7.0.2",
+    "oxfmt": "0.70.0",
+    "oxlint": "^1.85.0",
+    "oxlint-tsgolint": "^7.0.2003"
+  }
+}
