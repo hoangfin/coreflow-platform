@@ -1,0 +1,116 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": ["../../.oxlintrc.json"],
+  "plugins": ["react"],
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "error",
+    "typescript/only-throw-error": [
+      "error",
+      { "allow": [{ "from": "lib", "name": "Response" }] }
+    ],
+    "no-restricted-globals": [
+      "error",
+      {
+        "name": "fetch",
+        "message": "Never hand-write API calls. Use the typed api client (docs/project-structure.md → Frontend conventions)."
+      },
+      {
+        "name": "XMLHttpRequest",
+        "message": "Never hand-write API calls. Use the typed api client."
+      }
+    ],
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": [
+              "**/apps/api/**",
+              "**/api/src/**",
+              "@coreflow/api",
+              "@coreflow/api/*"
+            ],
+            "message": "apps/web must never import from apps/api. The contract is the boundary: consume @coreflow/api-client instead."
+          },
+          {
+            "group": ["axios", "ky", "superagent", "got", "node-fetch"],
+            "message": "Do not add an HTTP client. All API access goes through @coreflow/api-client."
+          }
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["app/lib/api.ts"],
+      "rules": { "no-restricted-globals": "off" }
+    },
+    {
+      "files": [
+        "app/platform/**",
+        "app/components/**",
+        "app/hooks/**",
+        "app/lib/**"
+      ],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "**/apps/api/**",
+                  "**/api/src/**",
+                  "@coreflow/api",
+                  "@coreflow/api/*"
+                ],
+                "message": "apps/web must never import from apps/api. The contract is the boundary: consume @coreflow/api-client instead."
+              },
+              {
+                "group": ["axios", "ky", "superagent", "got", "node-fetch"],
+                "message": "Do not add an HTTP client. All API access goes through @coreflow/api-client."
+              },
+              {
+                "group": ["~/modules/**", "**/modules/**"],
+                "message": "Platform and shared code must never import from business modules (app/modules)."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["app/modules/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "**/apps/api/**",
+                  "**/api/src/**",
+                  "@coreflow/api",
+                  "@coreflow/api/*"
+                ],
+                "message": "apps/web must never import from apps/api. The contract is the boundary: consume @coreflow/api-client instead."
+              },
+              {
+                "group": ["axios", "ky", "superagent", "got", "node-fetch"],
+                "message": "Do not add an HTTP client. All API access goes through @coreflow/api-client."
+              },
+              {
+                "group": ["~/modules/**", "**/modules/**"],
+                "message": "Business modules must never import each other. Use relative paths inside your own module; promote shared capabilities to app/platform."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
